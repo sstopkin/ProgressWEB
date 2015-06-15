@@ -58,7 +58,7 @@ function showSuccess(message) {
 function getAllWorkersList() {
     $.ajax({
         type: "GET",
-        url: "api/auth/userslist",
+        url: "api/workers/getallworkers",
         async: false,
         success: function (data) {
             workersList = JSON.parse(data);

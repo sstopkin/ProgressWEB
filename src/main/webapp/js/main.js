@@ -1,4 +1,4 @@
-function getCallsStatsPage() {
+function getMain() {
 //    $.ajax({
 //        type: "GET",
 //        url: "api/workers/getallworkers",

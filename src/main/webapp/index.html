@@ -19,34 +19,16 @@
         <!--some bootstrap callout color fix-->
         <link href="css/bs-callout.css" rel="stylesheet" type="text/css">
 
-        <link href="css/jumbotron-narrow.css" rel="stylesheet">
-
         <script src="js/lib/jquery-1.11.1.min.js" type="text/javascript"></script>
-
-        <!--https://github.com/garakh/kladrapi-jsclient-->
-        <link href="js/lib/kladrapi-jsclient/jquery.kladr.min.css" rel="stylesheet">
-        <script src="js/lib/kladrapi-jsclient/jquery.kladr.min.js" type="text/javascript"></script>
 
         <script src="//api-maps.yandex.ru/2.1/?load=package.full&amp;lang=ru-RU" type="text/javascript"></script>
 
         <script src="js/url.js" type="text/javascript"></script>
         <script src="js/index.js" type="text/javascript"></script>
-        <script src="js/auth.js" type="text/javascript"></script>
-        <script src="js/admin.js" type="text/javascript"></script>
         <script src="js/news.js" type="text/javascript"></script>
-        <script src="js/search.js" type="text/javascript"></script>
-        <script src="js/profile.js" type="text/javascript"></script>
         <script src="js/apartamentslist.js" type="text/javascript"></script>
-        <script src="js/apartamentsAddEditModal.js" type="text/javascript"></script>
         <script src="js/apartamentsview.js" type="text/javascript"></script>
-        <script src="js/callsComentsModal.js" type="text/javascript"></script>
-        <script src="js/hd.js" type="text/javascript"></script>
-        <script src="js/customerslist.js" type="text/javascript"></script>
-        <script src="js/customersview.js" type="text/javascript"></script>
-        <script src="js/planner.js" type="text/javascript"></script>
-        <script src="js/filemanager.js" type="text/javascript"></script>
         <script src="js/workerview.js" type="text/javascript"></script>
-        <script src="js/settings.js" type="text/javascript"></script>
         <script src="js/main.js" type="text/javascript"></script>
 
 
@@ -64,193 +46,182 @@
         <!--http://fontawesome.io/-->
         <link rel="stylesheet" href="css/font-awesome.min.css" />
 
-        <link href="css/custom.css" rel="stylesheet" type="text/css">
+        <style>
+            html,
+            body {
+                height: 100%;
+                /* The html and body elements cannot have any padding or margin. */
+            }
+            html {
+                overflow-y: scroll;
+            }
+            .image {
+                width: 100%;
+                padding: 10%;
+            }
+            .up_header{
+                margin:auto;
+                height:50px;
+                overflow:auto;
+                background: #1E9254;
+            }
+            #toTop {
+                display: none;
+                text-decoration: none;
+                position: fixed;
+                bottom: 10px;
+                right: 10px;
+                overflow: hidden;
+                width: 44px;
+                height:44px;
+                border: none;
+                text-indent: 100%;
+                background: url(images/top-move.png) no-repeat right top;
+            }
+            .copy p {
+                color: #666D89;
+                font-size: 0.8125em;
+                line-height: 1.8em;
+                text-align: center;
+            }
+            .copy p a {
+                color: #FFF;
+            }
+            .copy p a:hover {
+                color: #1E9254;
+            }
+            .logo{
+                padding: 10px;
+            }
+            .ca-icon {
+                font-family: 'WebSymbolsRegular', cursive;
+                font-size: 60px;
+                color: #333;
+                text-shadow: 0px 0px 1px #333;
+                line-height: 120px;
+                position: absolute;
+                width: 100%;
+                height: 50%;
+                left: 0px;
+                top: 0px;
+                text-align: center;
+                -webkit-transition: all 400ms linear;
+                -moz-transition: all 400ms linear;
+                -o-transition: all 400ms linear;
+                -ms-transition: all 400ms linear;
+                transition: all 400ms linear;
+                display: block;
+                color: #333;
+                position: relative;
+            }
+            .actions li {
+                display: inline;
+                list-style-type: none;
+            }
+            .title {
+                color: #1E9254;
+                font-family: 'Lato', sans-serif;
+                font-weight: bolder;
+                text-shadow: 1px 1px 2px black, 0 0 1em whitesmoke; /* Параметры тени */
+            }
+            /* Wrapper for page content to push down footer */
+            .wrap {
+                min-height: 100%;
+                height: auto !important;
+                height: 100%;
+                /* Negative indent footer by its height */
+                margin: 0 auto -100px;
+                /* Pad bottom by footer height */
+                padding: 0 0 100px;
+            }
+            .footer {
+                background: #1E9254;
+                height: 100px;
+            }
+            .white_text {
+                color: #EBEBEB;
+                font-family: 'Lato', sans-serif;
+            }
+            .btn-clear {
+                color: #FFF;
+                border-color: #FFF;
+                border-width: 2px;
+                margin-right: 15px;
+            }
+            .btn-clear:hover {
+                color: #000;
+                background-color: #EBEBEB;
+            }
+        </style>
     </head>
 
     <body >
-        <div class="clearfix" id="progresscrm">
-            <div id="wrapper">
-                <!-- Navigation -->
-                <nav class="navbar navbar-default navbar-static-top" role="navigation" style="margin-bottom: 0">
-                    <div class="navbar-header">
-                        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
-                            <span class="sr-only">Toggle navigation</span>
-                            <span class="icon-bar"></span>
-                            <span class="icon-bar"></span>
-                            <span class="icon-bar"></span>
-                        </button>
-                        <a class="navbar-brand" href="#">ProgressCRM</a>
-
-                    </div>
-
-
-                    <ul class="nav navbar-top-links navbar-right">
-                        <li class="dropdown">
-                            <a class="dropdown-toggle" data-toggle="dropdown" href="#">
-                                <span id="navbarUsername"></span><i class="fa fa-user fa-fw"></i> <i class="fa fa-caret-down"></i>
-                            </a>
-                            <ul class="dropdown-menu dropdown-user">
-                                <li><a href="#profile"><i class="fa fa-user fa-fw"></i> Профиль</a>
-                                </li>
-                                <li><a href="#settings"><i class="fa fa-gear fa-fw"></i> Настройки</a>
-                                </li>
-                                <li class="divider"></li>
-                                <li><a href="" onclick="logOut()"><i class="fa fa-sign-out fa-fw"></i> Выход</a>
-                                </li>
-                            </ul>
-                            <!-- /.dropdown-user -->
-
-                        </li>
-                        <!-- /.dropdown -->
-                    </ul>
-                    <!-- /.navbar-top-links -->
-
-
-                    <div class="navbar-default sidebar" role="navigation">
-
-                        <div class="sidebar-nav navbar-collapse">
-                            <ul class="nav">
-                                <li>
-                                    <div class="clock">
-                                        <div id="date"></div>
-                                        <div id="time">
-                                            <span id="hours"></span>:<span id="min"></span>
-                                            <!--:<span id="sec"></span>-->
-                                        </div>
-                                    </div>
-                                </li>
-                            </ul>
-                            <ul class="nav" id="side-menu">
-                                <li>
-                                    <a class="active" href="#"><i class="fa fa-dashboard fa-fw"></i> Главная</a>
-                                </li>
-                                <li>
-                                    <a href="#news" id="newsLink"><i class="fa fa-newspaper-o"></i> Новости</a>
-                                </li>
-                                <li>
-                                    <a href="#"><i class="fa fa-home"></i> Объекты<span class="fa arrow"></span></a>
-                                    <ul class="nav nav-second-level">
-                                        <li>
-                                            <a href="#apartaments/list/prepare">Прозвон<span id="apartamentsPrepareCount" class="badge pull-right"></span></a>
-                                        </li>
-                                        <li>
-                                        <li><a href="#apartaments/list/price">Прайс<span id="apartamentsPriceCount" class="badge pull-right"></span></a>
-                                        </li>
-                                        <li>
-                                            <a href="#apartaments/list/archive">Архив<span id="apartamentsArchiveCount" class="badge pull-right"></span></a>
-                                        </li>
-                                        <li>
-                                            <a href="#apartaments/list/notset">Не указан<span id="apartamentsNotsetCount" class="badge pull-right"></span></a>
-                                        </li>
-                                    </ul>
-                                    <!-- /.nav-second-level -->
-                                </li>
-
-                                <li>
-                                    <a href="#"><i class="fa fa-user"></i> Клиенты<span class="fa arrow"></span></a>
-                                    <ul class="nav nav-second-level">
-                                        <li>
-                                            <a href="#customers/list/current">Активные<span id="customersCurrentCount" class="badge pull-right"></span></a>
-                                        </li>
-                                        <li>
-                                            <a href="#customers/list/archive">Архив<span id="customersArchiveCount" class="badge pull-right"></span></a>
-                                        </li>
-                                    </ul>
-                                    <!-- /.nav-second-level -->
-                                </li>
-                                <li>
-                                    <a href="#planner"><i class="fa fa-calendar"></i> Задачи</a>
-                                </li>
-                                <li>
-                                    <a href="#helpdesk"><i class="fa fa-question"></i> HelpDesk</a>
-                                </li>
-                                <li id="adminMenu" style="display: none">
-                                    <a href="#"><i class="fa fa-cogs"></i> Администрирование<span class="fa arrow"></span></a>
-                                    <ul class="nav nav-second-level">
-                                        <li>
-                                            <a href="#admin/userandgroupmanagement">Пользователи и группы</a>
-                                            <a href="#admin/permissionmanagement">Управление правами</a>
-                                        </li>
-                                    </ul>
-                                    <!-- /.nav-second-level -->
-                                </li>
-                            </ul>
-                        </div>
-                        <!-- /.sidebar-collapse -->
-                    </div>
-                    <!-- /.navbar-static-side -->
-                </nav>
-
-                <div id="page-wrapper">
-                    <!--                    <div class="row">
-                                            <div class="col-lg-12">
-                                                <h1 class="page-header">Dashboard</h1>
-                                            </div>
-                                             /.col-lg-12 
-                                        </div>-->
-                    <div id="notificationsArea" class="notifications top-right"></div>
-                    <div class="row">
-                        <!--<div class="col-lg-3 col-md-6">-->
-                        <div class="col-lg-10">
-                            <div id="mainContainer"></div>
-                        </div>
-                        <div class="col-lg-2">
-                            <div id="oktellContainer"></div>
+        <div class="wrap">
+            <div class="up_header"></div>
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-3">
+                        <div class="logo">
+                            <a href="#"><img src="images/logo-progress.png" alt="" /></a>
                         </div>
                     </div>
-
+                    <div class="col-md-9">
+                        <nav class="navbar navbar-default">
+                            <div class="container-fluid">
+                                <div class="navbar-header">
+                                    <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+                                        <span class="sr-only">Toggle navigation</span>
+                                        <span class="icon-bar"></span>
+                                        <span class="icon-bar"></span>
+                                        <span class="icon-bar"></span>
+                                    </button>
+                                </div>
+                                <div id="navbar" class="navbar-collapse collapse">
+                                    <ul class="nav navbar-nav navbar-right">
+                                        <li><a href="#">Главная</a></li>
+                                        <li class="dropdown">
+                                            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Недвижимость<span class="caret"></span></a>
+                                            <ul class="dropdown-menu" role="menu">
+                                                <li><a href="#apartaments/list/prepare">Прозвон</a></li>
+                                                <li><a href="#apartaments/list/price">Прайс</a></li>
+                                                <li><a href="#apartaments/list/archive">Архив</a></li>
+                                                <li><a href="#apartaments/list/notset">Не указан</a></li>
+                                            </ul>
+                                        </li>
+                                        <li><a href="#news">Новости</a></li>
+                                        <li><a href="#docs">Документы</a></li>
+                                        <li class="dropdown">
+                                            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">О компании<span class="caret"></span></a>
+                                            <ul class="dropdown-menu" role="menu">
+                                                <li><a href="#offices">Офисы</a></li>
+                                                <li><a href="#staff">Сотрудники</a></li>
+                                                <li class="divider"></li>
+                                                <li><a href="#contactus">Связаться с нами</a></li>
+                                            </ul>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </nav>
+                    </div>
                 </div>
-                <!-- /#page-wrapper -->
             </div>
-            <!-- /#wrapper -->
+            <div class="container">
+                <div id="notificationsArea" class="notifications top-right"></div>
+                <div id="mainContainer"></div>
+            </div>
         </div>
-
-        <div class="container">
-            <div class="header clearfix">
-                <nav>
-                    <ul class="nav nav-pills pull-right">
-                        <li role="presentation" class="active"><a href="#">Home</a></li>
-                        <li role="presentation"><a href="#">About</a></li>
-                        <li role="presentation"><a href="#">Contact</a></li>
-                    </ul>
-                </nav>
-                <h3 class="text-muted">Project name</h3>
-            </div>
-
-            <div class="jumbotron">
-                <h1>Jumbotron heading</h1>
-                <p class="lead">Cras justo odio, dapibus ac facilisis in, egestas eget quam. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus.</p>
-                <p><a class="btn btn-lg btn-success" href="#" role="button">Sign up today</a></p>
-            </div>
-
-            <div class="row marketing">
-                <div class="col-lg-6">
-                    <h4>Subheading</h4>
-                    <p>Donec id elit non mi porta gravida at eget metus. Maecenas faucibus mollis interdum.</p>
-
-                    <h4>Subheading</h4>
-                    <p>Morbi leo risus, porta ac consectetur ac, vestibulum at eros. Cras mattis consectetur purus sit amet fermentum.</p>
-
-                    <h4>Subheading</h4>
-                    <p>Maecenas sed diam eget risus varius blandit sit amet non magna.</p>
-                </div>
-
-                <div class="col-lg-6">
-                    <h4>Subheading</h4>
-                    <p>Donec id elit non mi porta gravida at eget metus. Maecenas faucibus mollis interdum.</p>
-
-                    <h4>Subheading</h4>
-                    <p>Morbi leo risus, porta ac consectetur ac, vestibulum at eros. Cras mattis consectetur purus sit amet fermentum.</p>
-
-                    <h4>Subheading</h4>
-                    <p>Maecenas sed diam eget risus varius blandit sit amet non magna.</p>
+        <div class="footer">
+            <div class="container">
+                <div class="row white_text" style="padding-top: 20px">
+                    <div class="col-md-8">
+                        Обращаем ваше внимание на то, что данный интернет-сайт носит исключительно информационный характер и ни при каких условиях не является публичной офертой, определяемой положениями Статьи 437 (2) ГК РФ.
+                    </div>
+                    <div class="col-md-4">
+                        <div class="pull-right">Агентство недвижимости «Прогресс», г.Омск 2015</div>
+                    </div>
                 </div>
             </div>
-
-            <footer class="footer">
-                <p>© Company 2014</p>
-            </footer>
-
-        </div> <!-- /container -->
+        </div>
     </body>
 </html>

@@ -140,7 +140,6 @@ $(document).ready(function () {
     $(window).bind('hashchange', function () {
         $('#ajaxProgress').css('display', 'none');
         $("#errorBlock").css("display", "none");
-        checkStatus();
         parseUrl(location.hash);
     });
 });
