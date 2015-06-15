@@ -64,12 +64,12 @@ function getAllWorkersList() {
 }
 
 function getWorkersFullNameById(idWorker) {
-    for (var i = 0; i < workersList.length; ++i) {
-        var a = workersList[i];
+    $.each(workersList, function(key, value){
+        var a = key;
         if (idWorker === a[0]) {
             return a[1] + " " + a[3];
         }
-    }
+    });
 }
 
 function timeConverter(UNIX_timestamp, param) {

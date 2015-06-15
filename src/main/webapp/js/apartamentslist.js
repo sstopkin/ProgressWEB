@@ -68,11 +68,11 @@ function draw(array, status) {
 }
 
 function drawApartamentsListMap(array, status) {
-    var myMap;
-    myMap = new ymaps.Map('mapApartamentsListView', {
+    var myMap = new ymaps.Map('mapApartamentsListView', {
         center: [54.989342, 73.368212],
         zoom: 11
     });
+    var myPlacemark;
     array.forEach(function (entry) {
         myPlacemark = new ymaps.Placemark([entry.apartamentLan, entry.apartamentLon], {
             iconContent: "",

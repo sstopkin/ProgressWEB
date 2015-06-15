@@ -183,12 +183,6 @@ function getApartamentViewPage(apartamentId) {
                 content += "<p>";
                 content += array.description;
                 content += "</p>";
-                initMapView(array.apartamentLan, array.apartamentLon,
-                        array.cityName + " "
-                        + array.streetName + " "
-                        + array.houseNumber + " "
-                        + array.buildingNumber + " - "
-                        + array.roomNumber);
             },
             error: function (data) {
                 showDanger(data.responseText);
@@ -197,27 +191,4 @@ function getApartamentViewPage(apartamentId) {
         });
         $("#apartamentsFeatures").html(content);
     });
-}
-
-function initMapView(apartamentLan, apartamentLon, address) {
-    var myMap;
-    ymaps.ready(init);
-    function init() {
-        myMap = new ymaps.Map('mapApartamentsView', {
-            center: [apartamentLan, apartamentLon],
-            zoom: 16,
-            type: "yandex#publicMap",
-            controls: ['largeMapDefaultSet']
-        });
-    }
-    addPlacemark(myMap, apartamentLan, apartamentLon, address);
-    function addPlacemark(myMap, lat, lon, address) {
-        myMap.geoObjects.add(new ymaps.Placemark([lat, lon], {
-            balloonContentHeader: "",
-            balloonContentBody: address,
-            hintContent: ""
-        }, {
-            preset: 'islands#darkGreenDotIcon'
-        }));
-    }
 }
