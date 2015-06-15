@@ -68,33 +68,29 @@ function drawApartamentsListMap(array, status) {
     ymaps.ready(init);
     function init() {
         myMap = new ymaps.Map('mapApartamentsListView', {
-            center: [55.989342, 73.368212],
+            center: [54.989342, 73.368212],
             zoom: 11,
             type: "yandex#publicMap",
             controls: ['largeMapDefaultSet']
         });
-//        addPlacemark(myMap, 54.974133, 73.387205, "Пушкина 67 - офис 616");
-//        addPlacemark(myMap, 56.901503, 74.373696, "ул. Советская 23 а");
-//        addPlacemark(myMap, 55.048864, 74.580722, "ул. Ленина 37 а");
-    }
-    var myPlacemark;
-    array.forEach(function (entry) {
-        myPlacemark = new ymaps.Placemark([entry.apartamentLan, entry.apartamentLon], {
-            iconContent: "",
-            // Чтобы балун и хинт открывались на метке, необходимо задать ей определенные свойства.
-            balloonContentHeader: "ID " + entry.id,
-            balloonContentBody: entry.cityName + " "
-                    + entry.streetName + " "
-                    + entry.houseNumber + " "
-                    + entry.buildingNumber + " - "
-                    + entry.roomNumber,
-            balloonContentFooter: "Этаж " + entry.floor + "/" + entry.floors + ", Цена " + entry.price,
-            hintContent: entry.cityName + " "
-                    + entry.streetName + " "
-                    + entry.houseNumber + " "
-                    + entry.buildingNumber + " - "
-                    + entry.roomNumber
+        array.forEach(function (entry) {
+            myPlacemark = new ymaps.Placemark([entry.apartamentLan, entry.apartamentLon], {
+                iconContent: "",
+                // Чтобы балун и хинт открывались на метке, необходимо задать ей определенные свойства.
+                balloonContentHeader: "ID " + entry.id,
+                balloonContentBody: entry.cityName + " "
+                        + entry.streetName + " "
+                        + entry.houseNumber + " "
+                        + entry.buildingNumber + " - "
+                        + entry.roomNumber,
+                balloonContentFooter: "Этаж " + entry.floor + "/" + entry.floors + ", Цена " + entry.price,
+                hintContent: entry.cityName + " "
+                        + entry.streetName + " "
+                        + entry.houseNumber + " "
+                        + entry.buildingNumber + " - "
+                        + entry.roomNumber
+            });
+            myMap.geoObjects.add(myPlacemark);
         });
-        myMap.geoObjects.add(myPlacemark);
-    });
+    }
 }
