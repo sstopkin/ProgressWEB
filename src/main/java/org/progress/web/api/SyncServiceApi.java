@@ -7,34 +7,35 @@ import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.ejb.EJB;
-import javax.ejb.Stateless;
-import javax.ws.rs.GET;
+import javax.ws.rs.FormParam;
+import javax.ws.rs.POST;
 import javax.ws.rs.Path;
-import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Response;
 import org.hibernate.Session;
 import static org.progress.web.api.ApiHelper.ser;
-import org.progress.web.controller.ApartamentsController;
+import org.progress.web.controller.SyncServiceController;
 import org.progress.web.exceptions.CustomException;
 import org.progress.web.util.Command;
 import org.progress.web.util.TransactionService;
 
-@Stateless
-@Path("apartament")
-public class ApartamentsAPI {
+/**
+ *
+ * @author best Jun 15, 2015
+ */
+public class SyncServiceApi {
 
     @EJB
-    ApartamentsController apartamentsController;
+    SyncServiceController syncServiceController;
 
-    @GET
-    @Path("getapartament")
-    public Response getApartamentById(@QueryParam("id") final String id) throws CustomException {
+    @POST
+    @Path("setapartamentsdb")
+    public Response setAllApartamentsFull(@FormParam("key") final String key) throws CustomException {
         return TransactionService.runInScope(new Command<Response>() {
             @Override
             public Response execute(Session session) throws SQLException {
                 try {
-                    Gson apartamentById = new GsonBuilder().registerTypeAdapter(Date.class, ser).create();
-                    String result = apartamentById.toJson(apartamentsController.getApartamentById(session, id));
+                    Gson gson = new GsonBuilder().registerTypeAdapter(Date.class, ser).create();
+                    String result = gson.toJson(syncServiceController.setAllApartaments(session));
                     return ApiHelper.getResponse(result);
                 } catch (CustomException ex) {
                     Logger.getLogger(ApartamentsAPI.class.getName()).log(Level.SEVERE, null, ex);
@@ -44,15 +45,15 @@ public class ApartamentsAPI {
         });
     }
 
-    @GET
-    @Path("getallapartament")
-    public Response getAllApartaments(@QueryParam("status") final String status) throws CustomException {
+    @POST
+    @Path("setnewsdb")
+    public Response setAllNewsFull(@FormParam("key") final String key) throws CustomException {
         return TransactionService.runInScope(new Command<Response>() {
             @Override
             public Response execute(Session session) throws SQLException {
                 try {
-                    Gson allApartament = new GsonBuilder().registerTypeAdapter(Date.class, ser).create();
-                    String result = allApartament.toJson(apartamentsController.getAllApartament(session, status));
+                    Gson gson = new GsonBuilder().registerTypeAdapter(Date.class, ser).create();
+                    String result = gson.toJson(syncServiceController.setAllNews(session));
                     return ApiHelper.getResponse(result);
                 } catch (CustomException ex) {
                     Logger.getLogger(ApartamentsAPI.class.getName()).log(Level.SEVERE, null, ex);
@@ -62,15 +63,15 @@ public class ApartamentsAPI {
         });
     }
 
-    @GET
-    @Path("getallapartamentfull")
-    public Response getAllApartamentsFull(@QueryParam("status") final String status) throws CustomException {
+    @POST
+    @Path("setworkersdb")
+    public Response setAllWorkersFull(@FormParam("key") final String key) throws CustomException {
         return TransactionService.runInScope(new Command<Response>() {
             @Override
             public Response execute(Session session) throws SQLException {
                 try {
-                    Gson allApartament = new GsonBuilder().registerTypeAdapter(Date.class, ser).create();
-                    String result = allApartament.toJson(apartamentsController.getAllApartamentFull(session, status));
+                    Gson gson = new GsonBuilder().registerTypeAdapter(Date.class, ser).create();
+                    String result = gson.toJson(syncServiceController.setAllWorkers(session));
                     return ApiHelper.getResponse(result);
                 } catch (CustomException ex) {
                     Logger.getLogger(ApartamentsAPI.class.getName()).log(Level.SEVERE, null, ex);
@@ -80,4 +81,21 @@ public class ApartamentsAPI {
         });
     }
 
+    @POST
+    @Path("sync")
+    public Response setAllFull(@FormParam("key") final String key) throws CustomException {
+        return TransactionService.runInScope(new Command<Response>() {
+            @Override
+            public Response execute(Session session) throws SQLException {
+                try {
+                    Gson gson = new GsonBuilder().registerTypeAdapter(Date.class, ser).create();
+                    String result = gson.toJson(syncServiceController.setAll(session));
+                    return ApiHelper.getResponse(result);
+                } catch (CustomException ex) {
+                    Logger.getLogger(ApartamentsAPI.class.getName()).log(Level.SEVERE, null, ex);
+                    return ApiHelper.getResponse(ex);
+                }
+            }
+        });
+    }
 }

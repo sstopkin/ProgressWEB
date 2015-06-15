@@ -5,22 +5,15 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.UUID;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.ejb.EJB;
 import javax.ejb.Singleton;
 import org.hibernate.Session;
 import org.progress.web.dao.DaoFactory;
 import org.progress.web.exceptions.BadRequestException;
 import org.progress.web.exceptions.CustomException;
-import org.progress.web.exceptions.IncorrectPasswordException;
-import org.progress.web.exceptions.IsNotAuthenticatedException;
-import org.progress.web.logic.Constants;
 import org.progress.web.logic.Workers;
-import org.progress.web.util.Pair;
 import org.progress.web.util.ParamName;
-import org.progress.web.util.ParamUtil;
 import org.progress.web.util.SHA1;
 
 @Singleton

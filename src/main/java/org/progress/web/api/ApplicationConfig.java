@@ -13,7 +13,6 @@ public class ApplicationConfig extends Application {
     public Set<Class<?>> getClasses() {
         Reflections reflections = new Reflections(ApplicationConfig.class.getPackage().getName());
         Set<Class<?>> classes = reflections.getTypesAnnotatedWith(javax.ws.rs.Path.class);
-//        resources.add(UploadFileService.class);
         classes.add(MultiPartFeature.class);
         return classes;
     }

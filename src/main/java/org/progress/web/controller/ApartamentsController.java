@@ -151,4 +151,5 @@ public class ApartamentsController {
         apartaments.setIsAD(isAD);
         return DaoFactory.getApartamentsDao().modifyApartament(session, apartaments);
     }
+
 }

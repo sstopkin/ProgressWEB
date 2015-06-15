@@ -20,21 +20,8 @@
         <property name="hibernate.c3p0.max_statements">0</property>
         <property name="hibernate.c3p0.min_size">10 </property>
 
-        <mapping class="org.progress.web.logic.Comments" />
         <mapping class="org.progress.web.logic.Apartaments" />
-        <mapping class="org.progress.web.logic.Filespaces" />
-        <mapping class="org.progress.web.logic.Calls" />
-        <mapping class="org.progress.web.logic.Customers" />
-        <mapping class="org.progress.web.logic.HelpDeskRequest" />
-        <mapping class="org.progress.web.logic.Planner" />
         <mapping class="org.progress.web.logic.News" />
         <mapping class="org.progress.web.logic.Workers" />
-        <mapping class="org.progress.web.logic.Groups" />
-        <mapping class="org.progress.web.logic.WorkersInGroups" />
-        <mapping class="org.progress.web.logic.Settings" />
-        <mapping class="org.progress.web.logic.Entities" />
-        <mapping class="org.progress.web.logic.AccessTypes" />
-        <mapping class="org.progress.web.logic.AccessCategories" />
-        <mapping class="org.progress.web.logic.ACLEntry" />
     </session-factory>
 </hibernate-configuration>

@@ -3,20 +3,12 @@ package org.progress.web.controller;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.Map;
-import java.util.UUID;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import javax.ejb.EJB;
 import javax.ejb.Singleton;
-import javax.mail.MessagingException;
 import org.hibernate.Session;
 import org.progress.web.dao.DaoFactory;
 import org.progress.web.exceptions.BadRequestException;
 import org.progress.web.exceptions.CustomException;
-import org.progress.web.exceptions.IsNotAuthenticatedException;
-import org.progress.web.logic.Constants;
 import org.progress.web.logic.News;
-import org.progress.web.util.Pair;
 import org.progress.web.util.ParamName;
 import org.progress.web.util.ParamUtil;
 
@@ -51,4 +43,5 @@ public class NewsController {
     public News getNewsById(Session session, Map<String, String> param) throws CustomException, SQLException {
         return DaoFactory.getNewsDao().getNewsById(session, ParamUtil.getNotEmptyInt(param, ParamName.NEWS_ID));
     }
+
 }
