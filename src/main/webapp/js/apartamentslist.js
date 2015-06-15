@@ -32,7 +32,6 @@ function drawApartamentsListTable(array, status) {
     str += "<th>Добавлено</th>";
     str += "<th>Риэлтор</th>";
     str += "<th>Дата</th>";
-    str += "<th>Действие</th>";
     str += "</tr>";
     str += "</thead>";
     str += "<tbody>";
@@ -63,26 +62,6 @@ function draw(array, status) {
         str += "<td>" + getWorkersFullNameById(entry.idWorker) + "</td>";
         str += "<td>" + getWorkersFullNameById(entry.idWorkerTarget) + "</td>";
         str += "<td>" + timeConverter(entry.сreationDate, 'human') + "</td>";
-        str += '<td>';
-        str += '<div class="btn-group">';
-        str += '<button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown">';
-        str += 'Действия <span class="caret"></span>';
-        str += '</button>';
-        str += '<ul class="dropdown-menu" role="menu">';
-        str += '<li><button type=\"button\" onclick=\"addCallDialog(\'' + entry.ApartamentUUID + '\');\" class=\"btn btn-success\"><span class=\"glyphicon glyphicon-earphone\"></span> Добавить звонок</button></li>';
-        str += '<li class="divider"></li>';
-        str += '<li><button type=\"button\" onclick=\"addCommentDialog(\'' + entry.ApartamentUUID + '\');\" class=\"btn btn-success\"><span class=\"glyphicon glyphicon-comment\"></span> Добавить комментарий</button></li>';
-        str += '<li class="divider"></li>';
-        if (status == '1') {//Ad for price objects
-            if (entry.isAD == '0') {
-                str += '<li><button type=\"button\" onclick=\"setApartamentsAdState(\'' + entry.id + '\',1);\" class=\"btn btn-success\"><span class=\"glyphicon glyphicon-ok\"></span> Добавить рекламу</button></li>';
-            } else {
-                str += '<li><button type=\"button\" onclick=\"setApartamentsAdState(\'' + entry.id + '\',0);\" class=\"btn btn-danger\"><span class=\"glyphicon glyphicon-remove\"></span> Убрать рекламу</button></li>';
-            }
-        }
-        str += '</ul>';
-        str += '</div>';
-        str += '</td>';
         str += "</tr>";
     });
     return str;
@@ -90,66 +69,27 @@ function draw(array, status) {
 
 function drawApartamentsListMap(array, status) {
     var myMap;
-    $('#toggleMapApartamentsListView').bind({
-        click: function () {
-            if (!myMap) {
-                myMap = new ymaps.Map('mapApartamentsListView', {
-                    center: [54.989342, 73.368212],
-                    zoom: 11
-                });
-
-                // Для добавления элемента управления на карту
-                // используется поле map.controls.
-                // Это поле содержит ссылку на экземпляр класса map.control.Manager.
-
-                // Добавление элемента в коллекцию производится
-                // с помощью метода add.
-
-                // В метод add можно передать строковый идентификатор
-                // элемента управления и его параметры.
-                myMap.controls
-                        // Кнопка изменения масштаба.
-                        .add('zoomControl', {left: 5, top: 5});
-
-                // В конструкторе элемента управления можно задавать расширенные
-                // параметры, например, тип карты в обзорной карте.
-//                            .add(new ymaps.control.MiniMap({
-//                                type: 'yandex#publicMap'
-//                            }));
-
-                /*
-                 // Удаление элементов управления производится через метод remove.
-                 myMap.controls
-                 .remove(trafficControl)
-                 .remove('mapTools');
-                 */
-
-                array.forEach(function (entry) {
-                    myPlacemark = new ymaps.Placemark([entry.apartamentLan, entry.apartamentLon], {
-                        iconContent: "",
-                        // Чтобы балун и хинт открывались на метке, необходимо задать ей определенные свойства.
-                        balloonContentHeader: "ID " + entry.id,
-                        balloonContentBody: entry.cityName + " "
-                                + entry.streetName + " "
-                                + entry.houseNumber + " "
-                                + entry.buildingNumber + " - "
-                                + entry.roomNumber,
-                        balloonContentFooter: "Этаж " + entry.floor + "/" + entry.floors + ", Цена " + entry.price,
-                        hintContent: entry.cityName + " "
-                                + entry.streetName + " "
-                                + entry.houseNumber + " "
-                                + entry.buildingNumber + " - "
-                                + entry.roomNumber
-                    });
-                    myMap.geoObjects.add(myPlacemark);
-                });
-                $("#toggle").attr('value', 'Скрыть карту');
-            }
-            else {
-                myMap.destroy();// Деструктор карты
-                myMap = null;
-                $("#toggle").attr('value', 'Показать карту снова');
-            }
-        }
+    myMap = new ymaps.Map('mapApartamentsListView', {
+        center: [54.989342, 73.368212],
+        zoom: 11
+    });
+    array.forEach(function (entry) {
+        myPlacemark = new ymaps.Placemark([entry.apartamentLan, entry.apartamentLon], {
+            iconContent: "",
+            // Чтобы балун и хинт открывались на метке, необходимо задать ей определенные свойства.
+            balloonContentHeader: "ID " + entry.id,
+            balloonContentBody: entry.cityName + " "
+                    + entry.streetName + " "
+                    + entry.houseNumber + " "
+                    + entry.buildingNumber + " - "
+                    + entry.roomNumber,
+            balloonContentFooter: "Этаж " + entry.floor + "/" + entry.floors + ", Цена " + entry.price,
+            hintContent: entry.cityName + " "
+                    + entry.streetName + " "
+                    + entry.houseNumber + " "
+                    + entry.buildingNumber + " - "
+                    + entry.roomNumber
+        });
+        myMap.geoObjects.add(myPlacemark);
     });
 }

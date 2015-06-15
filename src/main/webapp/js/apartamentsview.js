@@ -10,19 +10,6 @@ function getApartamentViewPage(apartamentId) {
             success: function (data) {
                 $("#errorBlock").css("display", "none");
                 array = JSON.parse(data);
-                initMapView(array.apartamentLan, array.apartamentLon,
-                        array.cityName + " "
-                        + array.streetName + " "
-                        + array.houseNumber + " "
-                        + array.buildingNumber + " - "
-                        + array.roomNumber);
-                if (array.filespaceUUID != '') {
-                    console.log("fixme gallery")
-//                    initGallery(array.filespaceUUID);
-                }
-                content += "<input onclick=\"window.location = '/api/report/getapartamentsreport/" + array.id + "';\" type=\"button\" class=\"btn btn-info pull-right\" id=\"addApartamentBtn\" value=\"Карточка\" />";
-                content += "<a href=\"#apartaments/edit/" + array.id + "\" class=\"btn btn-warning\"><span class=\"glyphicon glyphicon-pencil\"></span>Редактировать</a>";
-                content += "<button type=\"button\" onclick=\"confirmActionDelete('apartamentsDeleteById(" + array.id + ")');\" class=\"btn btn-danger\"><span class=\"glyphicon glyphicon-remove\"></span>Удалить</button>";
                 content += '<p class="lead">Основная информация</p>';
                 content += "<p>";
                 content += "ID = " + array.id;
@@ -196,282 +183,41 @@ function getApartamentViewPage(apartamentId) {
                 content += "<p>";
                 content += array.description;
                 content += "</p>";
+                initMapView(array.apartamentLan, array.apartamentLon,
+                        array.cityName + " "
+                        + array.streetName + " "
+                        + array.houseNumber + " "
+                        + array.buildingNumber + " - "
+                        + array.roomNumber);
             },
             error: function (data) {
                 showDanger(data.responseText);
                 return false;
             }
         });
-        if (array.typeOfSales != '0') {
-            $.ajax({
-                type: "GET",
-                url: "api/customers/getcustomer?id=" + array.idCustomer,
-                async: false,
-                success: function (data) {
-                    var array = JSON.parse(data);
-                    content += "<p>";
-                    content += '<p class="lead">Информация о владельце: </p>';
-                    content += "</p>";
-                    content += array.customersFname + " ";
-                    content += array.customersLname + " ";
-                    content += array.customersMname + " ";
-                    content += array.customersPhone + " ";
-                    content += "</p>";
-                }
-            });
-        }
         $("#apartamentsFeatures").html(content);
-        $.ajax({
-            type: "GET",
-            url: "api/calls/getcalls?objectUUID=" + array.ApartamentUUID,
-            success: function (data) {
-                $("#errorBlock").css("display", "none");
-                var callsData = JSON.parse(data);
-                var str = '<button type=\"button\" onclick=\"addCallDialog(\'' + array.ApartamentUUID + '\');\" class=\"btn btn-success\"><span class=\"glyphicon glyphicon-earphone\"></span> Добавить звонок</button>';
-                str += '<table class="table table-striped table-bordered" cellspacing="0" width="100%" id="callsListTable">';
-                str += "<thead class='t-header'><tr>";
-                str += "<th>Дата</th>";
-                str += "<th>Входящий номер</th>";
-                str += "<th>Комментарий</th>";
-                str += "</tr></thead>";
-                str += "<tbody>";
-                for (var j = 0; j < callsData.length; ++j) {
-                    str += "<tr><td>";
-                    str += timeConverter(callsData[j].date, 'human');
-                    str += "</td><td>";
-                    str += callsData[j].incomingPhoneNumber;
-                    str += "</td><td>";
-                    str += callsData[j].description;
-                }
-                str += "\n</tbody>\n</table>\n";
-                $("#customersCalls").html(str);
-                $('#callsListTable').dataTable();
-            },
-            error: function (data) {
-                showDanger(data.responseText);
-                return false;
-            }
-        });
-        $.ajax({
-            type: "GET",
-            url: "api/comments/getcomments?objectUUID=" + array.ApartamentUUID,
-            success: function (data) {
-                $("#errorBlock").css("display", "none");
-                var commentsData = JSON.parse(data);
-                var str = '<button type=\"button\" onclick=\"addCommentDialog(\'' + array.ApartamentUUID + '\');\" class=\"btn btn-success\"><span class=\"glyphicon glyphicon-comment\"></span> Добавить комментарий</button>';
-                str += '<table class="table table-striped table-bordered" cellspacing="0" width="100%" id="commentsListTable">';
-                str += "<thead class='t-header'><tr>";
-                str += "<th>Дата</th>";
-                str += "<th>Комментарий</th>";
-                str += "</tr></thead>";
-                str += "<tbody>";
-                for (var j = 0; j < commentsData.length; ++j) {
-                    str += "<tr><td>";
-                    str += timeConverter(commentsData[j].сreationDate, 'human');
-                    str += "</td><td>";
-                    str += commentsData[j].text;
-                }
-                str += "\n</tbody>\n</table>\n";
-                $("#workersComments").html(str);
-                $('#commentsListTable').dataTable();
-            },
-            error: function (data) {
-                showDanger(data.responseText);
-                return false;
-            }
-        });
-        getFileManagerPage(array.filespaceUUID, array.ApartamentUUID);
-        $.ajax({
-            type: "GET",
-            url: '/api/planner/uuid/' + array.ApartamentUUID,
-            success: function (data) {
-                var array = JSON.parse(data);
-                initCalendar(array, "#apartamentsTasksCalendar");
-            },
-            error: function (data) {
-                showDanger(data.responseText);
-                return false;
-            }
-        });
-        $("#addApartamentTaskBtn").click(function () {
-            addPlannerTaskDialog(array.ApartamentUUID);
-        });
-    });
-}
-
-function initGallery(filespaceUUID) {
-    var array;
-    $.when($.ajax({
-        type: "POST",
-        url: "api/fm/getfilelist",
-        data: ({
-            path: filespaceUUID + '/gallery'
-        }),
-        success: function (data) {
-            array = JSON.parse(data);
-            console.log(array);
-        },
-        error: function (data) {
-            showDanger(data.responseText);
-        }
-    })).then(function () {
-        var str = "";
-        str += '<div id="apartamentsViewGallery" class="carousel slide">';
-        str += '<div class="carousel-inner">';
-        var active = 'false';
-        array.forEach(function (entry) {
-
-            str += '<div ';
-            if (active == 'false') {
-                str += 'class="active item">';
-                active = true;
-            } else {
-                str += 'class="item">';
-            }
-            str += '<img src="' + window.location.origin + '/api/fm/getimage/' + entry.path + '">';
-            str += '</div>';
-        });
-
-
-
-        str += '</div>';
-        str += '<a class="carousel-control left" href="#apartamentsViewGallery" data-slide="prev">&lsaquo;</a>';
-        str += '<a class="carousel-control right" href="#apartamentsViewGallery" data-slide="next">&rsaquo;</a>';
-
-//        str += '<ol class="carousel-linked-nav pagination" style="margin: 0 auto;">';
-//        var active = 'false';
-//        var pos = 1;
-//        array.forEach(function (entry) {
-//            str += '<li class="';
-//            if (active == 'false') {
-//                str += ' active">';
-//                active = true;
-//            } else {
-//                str += '">';
-//            }
-//            str += '<a href="#' + pos + '">1</a></li>'
-//            pos++;
-//        });
-//        str += '</ol>';
-        $("#apartamentsPhoto").html(str);
-
-
-        $('#apartamentsViewGallery').carousel({
-            interval: 3000
-        });
-
-        /* SLIDE ON CLICK */
-
-        $('.carousel-linked-nav > li > a').click(function () {
-
-            // grab href, remove pound sign, convert to number
-            var item = Number($(this).attr('href').substring(1));
-
-            // slide to number -1 (account for zero indexing)
-            $('#apartamentsViewGallery').carousel(item - 1);
-
-            // remove current active class
-            $('.carousel-linked-nav .active').removeClass('active');
-
-            // add active class to just clicked on item
-            $(this).parent().addClass('active');
-
-            // don't follow the link
-            return false;
-        });
-
-        /* AUTOPLAY NAV HIGHLIGHT */
-
-// bind 'slid' function
-//        $('#apartamentsViewGallery').on('slid', function () {
-//        $('#apartamentsViewGallery').on('slide.bs.carousel', function (e) {
-//
-//            // remove active class
-//            $('.carousel-linked-nav .active').removeClass('active');
-//
-//            // get index of currently active item
-//            var idx = $('#apartamentsViewGallery .item.active').index();
-//            console.log(idx)
-//            // select currently active item and add active class
-//            $('.carousel-linked-nav li:eq(' + idx + ')').addClass('active');
-//
-//        });
-    });
-
-}
-
-function createApartamentsFilespace(targetuuid) {
-    $.ajax({
-        type: "POST",
-        url: "api/filespaces/createfilespace",
-        data: ({
-            targetuuid: targetuuid,
-            type: 1
-        }),
-        success: function () {
-            location.reload(); //FIXME
-            $("#errorBlock").css("display", "none");
-        },
-        error: function (data) {
-            showDanger(data.responseText);
-        }
     });
 }
 
 function initMapView(apartamentLan, apartamentLon, address) {
     var myMap;
-//    <div id="map" style="width: 450px; height: 450px"></div>
-//    $("#mapApartamentsView").html(maps);
-    $('#toggle').bind({
-        click: function () {
-            if (!myMap) {
-                myMap = new ymaps.Map('mapApartamentsView', {
-                    center: [apartamentLan, apartamentLon],
-                    zoom: 16
-                });
-
-                // Для добавления элемента управления на карту
-                // используется поле map.controls.
-                // Это поле содержит ссылку на экземпляр класса map.control.Manager.
-
-                // Добавление элемента в коллекцию производится
-                // с помощью метода add.
-
-                // В метод add можно передать строковый идентификатор
-                // элемента управления и его параметры.
-                myMap.controls
-                        // Кнопка изменения масштаба.
-                        .add('zoomControl', {left: 5, top: 5});
-
-                // В конструкторе элемента управления можно задавать расширенные
-                // параметры, например, тип карты в обзорной карте.
-//                            .add(new ymaps.control.MiniMap({
-//                                type: 'yandex#publicMap'
-//                            }));
-
-                /*
-                 // Удаление элементов управления производится через метод remove.
-                 myMap.controls
-                 .remove(trafficControl)
-                 .remove('mapTools');
-                 */
-
-                myPlacemark = new ymaps.Placemark([apartamentLan, apartamentLon], {
-                    // Чтобы балун и хинт открывались на метке, необходимо задать ей определенные свойства.
-                    balloonContentHeader: "",
-                    balloonContentBody: address,
-                    balloonContentFooter: "",
-                    hintContent: ""
-                });
-
-                myMap.geoObjects.add(myPlacemark);
-                $("#toggle").attr('value', 'Скрыть карту');
-            }
-            else {
-                myMap.destroy();// Деструктор карты
-                myMap = null;
-                $("#toggle").attr('value', 'Показать карту снова');
-            }
-        }
-    });
+    ymaps.ready(init);
+    function init() {
+        myMap = new ymaps.Map('mapApartamentsView', {
+            center: [apartamentLan, apartamentLon],
+            zoom: 16,
+            type: "yandex#publicMap",
+            controls: ['largeMapDefaultSet']
+        });
+    }
+    addPlacemark(myMap, apartamentLan, apartamentLon, address);
+    function addPlacemark(myMap, lat, lon, address) {
+        myMap.geoObjects.add(new ymaps.Placemark([lat, lon], {
+            balloonContentHeader: "",
+            balloonContentBody: address,
+            hintContent: ""
+        }, {
+            preset: 'islands#darkGreenDotIcon'
+        }));
+    }
 }

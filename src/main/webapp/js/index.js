@@ -1,12 +1,4 @@
-var type;
 var workersList = "";
-var oktell;
-
-var permissions;
-
-var map = null;
-var placemark = null;
-var map_created = false;
 $(document).ready(function () {
     parseUrl(location.href);
     $("#closeAlert").click(function () {
