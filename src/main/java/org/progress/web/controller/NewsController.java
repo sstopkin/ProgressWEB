@@ -23,30 +23,12 @@ import org.progress.web.util.ParamUtil;
 @Singleton
 public class NewsController {
 
-    @EJB
-    AuthenticationManager authManager;
-
     public List<News> getNews(Session session) throws SQLException, CustomException {
-        if (token == null) {
-            throw new IsNotAuthenticatedException();
-        }
-        int idWorker = authManager.getUserIdByToken(UUID.fromString(token));
-        Pair<Integer, Integer> permission = AclController.getAclCheckAccess(session, Constants.ENTITIES.NEWS, idWorker, Constants.ACL.ACCESS_VIEW);
-        return DaoFactory.getNewsDao().getNews(session, permission.getSecond(), idWorker);
+        return DaoFactory.getNewsDao().getNews(session);
     }
 
     public boolean addNews(Session session, String text, String header) throws CustomException, SQLException {
-        if (token == null) {
-            throw new IsNotAuthenticatedException();
-        }
-        int idWorker = authManager.getUserIdByToken(UUID.fromString(token));
-        Pair permission = AclController.getAclCheckAccess(session, Constants.ENTITIES.NEWS, idWorker, Constants.ACL.ACCESS_ADD_EIDT);
-        DaoFactory.getNewsDao().addNews(session, idWorker, text, header);
-        try {
-            JavaMail.sendMail(SettingsController.parameters.get("admin.email"), text, header);
-        } catch (MessagingException ex) {
-            Logger.getLogger(NewsController.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        DaoFactory.getNewsDao().addNews(session, text, header);
         return true;
     }
 
@@ -54,34 +36,19 @@ public class NewsController {
         if (id == null) {
             throw new BadRequestException();
         }
-        if (token == null) {
-            throw new IsNotAuthenticatedException();
-        }
-        int idWorker = authManager.getUserIdByToken(UUID.fromString(token));
-        Pair permission = AclController.getAclCheckAccess(session, Constants.ENTITIES.NEWS, idWorker, Constants.ACL.ACCESS_DELETE);
-        DaoFactory.getNewsDao().removeNewsById(session, idWorker, Integer.valueOf(id));
+        DaoFactory.getNewsDao().removeNewsById(session, Integer.valueOf(id));
         return true;
     }
 
     public boolean editNewsById(Session session, Map<String, String> map) throws CustomException, SQLException {
-        if (token == null) {
-            throw new IsNotAuthenticatedException();
-        }
         int newsId = ParamUtil.getInt(map, ParamName.NEWS_ID);
         String text = map.get(ParamName.NEWS_TEXT);
         String header = map.get(ParamName.NEWS_HEADER);
-        int idWorker = authManager.getUserIdByToken(UUID.fromString(token));
-        Pair permission = AclController.getAclCheckAccess(session, Constants.ENTITIES.NEWS, idWorker, Constants.ACL.ACCESS_ADD_EIDT);
-        DaoFactory.getNewsDao().editNewsById(session, newsId, idWorker, header, text);
+        DaoFactory.getNewsDao().editNewsById(session, newsId, header, text);
         return true;
     }
 
     public News getNewsById(Session session, Map<String, String> param) throws CustomException, SQLException {
-        if (token == null) {
-            throw new IsNotAuthenticatedException();
-        }
-        int idWorker = authManager.getUserIdByToken(UUID.fromString(token));
-        Pair permission = AclController.getAclCheckAccess(session, Constants.ENTITIES.NEWS, idWorker, Constants.ACL.ACCESS_VIEW);
         return DaoFactory.getNewsDao().getNewsById(session, ParamUtil.getNotEmptyInt(param, ParamName.NEWS_ID));
     }
 }

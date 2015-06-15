@@ -10,7 +10,6 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
-import javax.ws.rs.CookieParam;
 import javax.ws.rs.FormParam;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
@@ -19,7 +18,7 @@ import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Response;
 import org.hibernate.Session;
 import static org.progress.web.api.ApiHelper.ser;
-import org.progress.web.controllers.ApartamentsController;
+import org.progress.web.controller.ApartamentsController;
 import org.progress.web.exceptions.CustomException;
 import org.progress.web.util.Command;
 import org.progress.web.util.ParamName;
@@ -34,14 +33,13 @@ public class ApartamentsAPI {
 
     @GET
     @Path("getapartament")
-    public Response getApartamentById(@QueryParam("id") final String id,
-            @CookieParam("token") final String token) throws CustomException {
+    public Response getApartamentById(@QueryParam("id") final String id) throws CustomException {
         return TransactionService.runInScope(new Command<Response>() {
             @Override
             public Response execute(Session session) throws SQLException {
                 try {
                     Gson apartamentById = new GsonBuilder().registerTypeAdapter(Date.class, ser).create();
-                    String result = apartamentById.toJson(apartamentsController.getApartamentById(session, token, id));
+                    String result = apartamentById.toJson(apartamentsController.getApartamentById(session, id));
                     return ApiHelper.getResponse(result);
                 } catch (CustomException ex) {
                     Logger.getLogger(ApartamentsAPI.class.getName()).log(Level.SEVERE, null, ex);
@@ -53,14 +51,13 @@ public class ApartamentsAPI {
 
     @GET
     @Path("getallapartament")
-    public Response getAllApartaments(@QueryParam("status") final String status,
-            @CookieParam("token") final String token) throws CustomException {
+    public Response getAllApartaments(@QueryParam("status") final String status) throws CustomException {
         return TransactionService.runInScope(new Command<Response>() {
             @Override
             public Response execute(Session session) throws SQLException {
                 try {
                     Gson allApartament = new GsonBuilder().registerTypeAdapter(Date.class, ser).create();
-                    String result = allApartament.toJson(apartamentsController.getAllApartament(session, token, status));
+                    String result = allApartament.toJson(apartamentsController.getAllApartament(session, status));
                     return ApiHelper.getResponse(result);
                 } catch (CustomException ex) {
                     Logger.getLogger(ApartamentsAPI.class.getName()).log(Level.SEVERE, null, ex);
@@ -72,14 +69,13 @@ public class ApartamentsAPI {
 
     @GET
     @Path("getallapartamentfull")
-    public Response getAllApartamentsFull(@QueryParam("status") final String status,
-            @CookieParam("token") final String token) throws CustomException {
+    public Response getAllApartamentsFull(@QueryParam("status") final String status) throws CustomException {
         return TransactionService.runInScope(new Command<Response>() {
             @Override
             public Response execute(Session session) throws SQLException {
                 try {
                     Gson allApartament = new GsonBuilder().registerTypeAdapter(Date.class, ser).create();
-                    String result = allApartament.toJson(apartamentsController.getAllApartamentFull(session, token, status));
+                    String result = allApartament.toJson(apartamentsController.getAllApartamentFull(session, status));
                     return ApiHelper.getResponse(result);
                 } catch (CustomException ex) {
                     Logger.getLogger(ApartamentsAPI.class.getName()).log(Level.SEVERE, null, ex);
@@ -91,7 +87,7 @@ public class ApartamentsAPI {
 
     @POST
     @Path("addapartament")
-    public Response addApartament(@CookieParam("token") final String token,
+    public Response addApartament(
             @FormParam("typeofsales") final String typeOfSales,
             @FormParam("cityName") final String cityName,
             @FormParam("streetName") final String streetName,
@@ -123,7 +119,8 @@ public class ApartamentsAPI {
             @FormParam("replanning") final String rePlanning,
             @FormParam("idWorkerTarget") final String idWorkerTarget,
             @FormParam("idCustomer") final String idCustomer,
-            @FormParam("status") final String status) throws SQLException, CustomException {
+            @FormParam("status") final String status
+    ) throws SQLException, CustomException {
         return TransactionService.runInScope(new Command<Response>() {
             @Override
             public Response execute(Session session) throws SQLException {
@@ -163,7 +160,7 @@ public class ApartamentsAPI {
                     map.put(ParamName.ID_CUSTOMER, idCustomer);
                     map.put(ParamName.STATUS, status);
 
-                    boolean result = apartamentsController.addApartament(session, token, map);
+                    boolean result = apartamentsController.addApartament(session, map);
 
                     return ApiHelper.getResponse(result);
                 } catch (CustomException ex) {
@@ -176,7 +173,7 @@ public class ApartamentsAPI {
 
     @POST
     @Path("editapartament")
-    public Response editApartament(@CookieParam("token") final String token,
+    public Response editApartament(
             @FormParam("id") final String id,
             @FormParam("typeofsales") final String typeOfSales,
             @FormParam("cityName") final String cityName,
@@ -214,7 +211,6 @@ public class ApartamentsAPI {
             @Override
             public Response execute(Session session) throws SQLException {
                 try {
-
                     Map<String, String> map = new HashMap<>();
                     map.put(ParamName.TYPE_OF_SALES, typeOfSales);
                     map.put(ParamName.CITY_NAME, cityName);
@@ -250,7 +246,7 @@ public class ApartamentsAPI {
                     map.put(ParamName.STATUS, status);
                     map.put(ParamName.APARTAMENTS_ID, id);
 
-                    boolean result = apartamentsController.editApartament(session, token, map);
+                    boolean result = apartamentsController.editApartament(session, map);
                     return ApiHelper.getResponse(result);
                 } catch (CustomException ex) {
                     Logger.getLogger(ApartamentsAPI.class.getName()).log(Level.SEVERE, null, ex);
@@ -262,13 +258,12 @@ public class ApartamentsAPI {
 
     @POST
     @Path("remove")
-    public Response removeApartament(@CookieParam("token") final String token,
-            @FormParam("id") final String id) throws SQLException, CustomException {
+    public Response removeApartament(@FormParam("id") final String id) throws SQLException, CustomException {
         return TransactionService.runInScope(new Command<Response>() {
             @Override
             public Response execute(Session session) throws SQLException {
                 try {
-                    boolean result = apartamentsController.removeApartament(session, token, id);
+                    boolean result = apartamentsController.removeApartament(session, id);
                     return ApiHelper.getResponse(result);
                 } catch (CustomException ex) {
                     Logger.getLogger(ApartamentsAPI.class.getName()).log(Level.SEVERE, null, ex);
@@ -278,43 +273,4 @@ public class ApartamentsAPI {
         });
     }
 
-    @POST
-    @Path("ad")
-    public Response setApartamentsAd(@CookieParam("token") final String token,
-            @FormParam("id") final String apartamentsId,
-            @FormParam("state") final String state) throws SQLException, CustomException {
-        return TransactionService.runInScope(new Command<Response>() {
-            @Override
-            public Response execute(Session session) throws SQLException {
-                try {
-                    Map<String, String> map = new HashMap<>();
-                    map.put(ParamName.APARTAMENTS_ID, apartamentsId);
-                    map.put(ParamName.AD, state);
-                    boolean result = apartamentsController.setApartamentsAdState(session, token, map);
-                    return ApiHelper.getResponse(result);
-                } catch (CustomException ex) {
-                    Logger.getLogger(ApartamentsAPI.class.getName()).log(Level.SEVERE, null, ex);
-                    return ApiHelper.getResponse(ex);
-                }
-            }
-        });
-    }
-
-//    @GET
-//    @Path("genyml")
-//    public Response getApartamentsYML() throws CustomException {
-//        return TransactionService.runInScope(new Command<Response>() {
-//            @Override
-//            public Response execute(Session session) throws SQLException {
-//                try {
-//                    Gson apartamentById = new GsonBuilder().registerTypeAdapter(Date.class, ser)                             .create();
-//                    String result = apartamentById.toJson(apartamentsController.getApartamentsYML(session));
-//                    return ApiHelper.getResponse(result);
-//                } catch (CustomException ex) {
-//                    Logger.getLogger(ApartamentsAPI.class.getName()).log(Level.SEVERE, null, ex);
-//                    return ApiHelper.getResponse(ex);
-//                }
-//            }
-//        });
-//    }
 }

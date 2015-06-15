@@ -24,14 +24,14 @@ public class ApartamentsDao {
             int loggia, int yearOfConstruction, String description,
             boolean MethodOfPurchase_PureSale, boolean MethodOfPurchase_Mortgage,
             boolean MethodOfPurchase_Exchange, boolean MethodOfPurchase_Rent,
-            boolean rePplanning, int idWorker, int idWorkerTarget, int idCustomer, int status, int isAD, boolean IsApproved) throws SQLException {
+            boolean rePplanning, int idWorkerTarget, int idCustomer, int status, int isAD, boolean IsApproved) throws SQLException {
         return (int) session.save(new Apartaments(typeOfSales, cityName, streetName,
                 houseNumber, buildingNumber, kladrId, shortAddress, apartamentLan, apartamentLon,
                 rooms, dwellingType, price, cityDistrict, floor,
                 floors, roomNumber, material, sizeApartament, sizeLiving, sizeKitchen, balcony,
                 loggia, yearOfConstruction, description, MethodOfPurchase_PureSale,
                 MethodOfPurchase_Mortgage, MethodOfPurchase_Exchange, MethodOfPurchase_Rent,
-                rePplanning, idWorker, idWorkerTarget, idCustomer, IsApproved, status, isAD));
+                rePplanning, 1, idWorkerTarget, idCustomer, IsApproved, status, isAD));
     }
 
     public boolean setApproveApartamentById(final Session session, final int apartamentId, final boolean flag) throws SQLException {
@@ -64,30 +64,24 @@ public class ApartamentsDao {
         return list.get(0);
     }
 
-    public List<Apartaments> getAllApartamentsFew(Session session, int idWorker, int status, int permission) throws SQLException {
+    public List<Apartaments> getAllApartamentsFew(Session session, int status) throws SQLException {
         //FIXME
         Criteria cr = session.createCriteria(Apartaments.class);
         cr.add(Restrictions.eq(DbFields.APARTAMENTS.STATUS, status));
         cr.add(Restrictions.eq(DbFields.APARTAMENTS.DELETED, false));
-        if (permission != Constants.ACL.CATEGORIES_ALL) {
-            cr.add(Restrictions.eq(DbFields.APARTAMENTS.IDWORKER, idWorker));
-        }
         cr.addOrder(Order.asc(DbFields.APARTAMENTS.ROOMS));
         return cr.list();
     }
 
-    public List<Apartaments> getAllApartamentsFull(Session session, int idWorker, int status, int permission) throws SQLException {
+    public List<Apartaments> getAllApartamentsFull(Session session, int status) throws SQLException {
         Criteria cr = session.createCriteria(Apartaments.class);
         cr.add(Restrictions.eq(DbFields.APARTAMENTS.STATUS, status));
         cr.add(Restrictions.eq(DbFields.APARTAMENTS.DELETED, false));
-        if (permission != Constants.ACL.CATEGORIES_ALL) {
-            cr.add(Restrictions.eq(DbFields.APARTAMENTS.IDWORKER, idWorker));
-        }
         cr.addOrder(Order.asc(DbFields.APARTAMENTS.ROOMS));
         return cr.list();
     }
 
-    public List searchByQUery(Session session, int assigned, int idWorker, String startDate, String endDate, String contains, String type) throws SQLException {
+    public List searchByQUery(Session session, int assigned, String startDate, String endDate, String contains, String type) throws SQLException {
         List resList = new ArrayList();
 
 //        if (assigned != -1) {

@@ -10,16 +10,13 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
-import javax.ws.rs.CookieParam;
-import javax.ws.rs.FormParam;
 import javax.ws.rs.GET;
-import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Response;
 import org.hibernate.Session;
 import static org.progress.web.api.ApiHelper.ser;
-import org.progress.web.controllers.NewsController;
+import org.progress.web.controller.NewsController;
 import org.progress.web.exceptions.CustomException;
 import org.progress.web.util.Command;
 import org.progress.web.util.ParamName;
@@ -33,7 +30,7 @@ public class NewsApi {
     NewsController newsController;
 
     @GET
-    public Response news(@CookieParam("token") final String token) throws SQLException, CustomException {
+    public Response news() throws SQLException, CustomException {
         return TransactionService.runInScope(new Command<Response>() {
             @Override
             public Response execute(Session session) throws SQLException {
@@ -41,7 +38,7 @@ public class NewsApi {
                     Gson newsList = new GsonBuilder().registerTypeAdapter(Date.class, ser)
                             .create();
                     String newsJson = newsList.toJson(newsController
-                            .getNews(session, token));
+                            .getNews(session));
                     return ApiHelper.getResponse(newsJson);
                 } catch (CustomException ex) {
                     Logger.getLogger(NewsApi.class.getName()).log(Level.SEVERE, null, ex);
@@ -51,74 +48,9 @@ public class NewsApi {
         });
     }
 
-    @POST
-    @Path("deletenews")
-    public Response deleteNews(@CookieParam("token") final String token,
-            @FormParam("id") final String id) throws SQLException, CustomException {
-        return TransactionService.runInScope(new Command<Response>() {
-            @Override
-            public Response execute(Session session) throws SQLException {
-                try {
-                    boolean result = newsController.deleteNewsById(session, token, id);
-                    return ApiHelper.getResponse(result);
-                } catch (CustomException ex) {
-                    Logger.getLogger(NewsApi.class.getName()).log(Level.SEVERE, null, ex);
-                    return ApiHelper.getResponse(ex);
-                }
-            }
-        });
-    }
-
-    @POST
-    @Path("addnews")
-    public Response addNews(@CookieParam("token") final String token,
-            @FormParam("header") final String header,
-            @FormParam("text") final String text)
-            throws SQLException, CustomException {
-        return TransactionService.runInScope(new Command<Response>() {
-            @Override
-            public Response execute(Session session) throws SQLException {
-                try {
-                    boolean result = newsController.addNews(session, token, header, text);
-                    return ApiHelper.getResponse(result);
-                } catch (CustomException ex) {
-                    Logger.getLogger(NewsApi.class.getName()).log(Level.SEVERE, null, ex);
-                    return ApiHelper.getResponse(ex);
-                }
-            }
-        });
-    }
-
-    @POST
-    @Path("editnews")
-    public Response editNews(@CookieParam("token") final String token,
-            @FormParam("id") final String newsId,
-            @FormParam("header") final String header,
-            @FormParam("text") final String text
-    ) throws SQLException, CustomException {
-        return TransactionService.runInScope(new Command<Response>() {
-            @Override
-            public Response execute(Session session) throws SQLException {
-                try {
-                    Map<String, String> map = new HashMap<>();
-                    map.put(ParamName.NEWS_ID, newsId);
-                    map.put(ParamName.NEWS_HEADER, header);
-                    map.put(ParamName.NEWS_TEXT, text);
-
-                    boolean result = newsController.editNewsById(session, token, map);
-                    return ApiHelper.getResponse(result);
-                } catch (CustomException ex) {
-                    Logger.getLogger(ApartamentsAPI.class.getName()).log(Level.SEVERE, null, ex);
-                    return ApiHelper.getResponse(ex);
-                }
-            }
-        });
-    }
-
     @GET
     @Path("getnews")
-    public Response getNewsById(@QueryParam("id") final String newsId,
-            @CookieParam("token") final String token) throws CustomException {
+    public Response getNewsById(@QueryParam("id") final String newsId) throws CustomException {
         return TransactionService.runInScope(new Command<Response>() {
             @Override
             public Response execute(Session session) throws SQLException {
@@ -126,7 +58,7 @@ public class NewsApi {
                     Gson newsById = new GsonBuilder().registerTypeAdapter(Date.class, ser).create();
                     Map<String, String> map = new HashMap<>();
                     map.put(ParamName.NEWS_ID, newsId);
-                    String result = newsById.toJson(newsController.getNewsById(session, token, map));
+                    String result = newsById.toJson(newsController.getNewsById(session, map));
                     return ApiHelper.getResponse(result);
                 } catch (CustomException ex) {
                     Logger.getLogger(ApartamentsAPI.class.getName()).log(Level.SEVERE, null, ex);
