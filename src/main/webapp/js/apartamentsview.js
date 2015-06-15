@@ -10,6 +10,12 @@ function getApartamentViewPage(apartamentId) {
             success: function (data) {
                 $("#errorBlock").css("display", "none");
                 array = JSON.parse(data);
+                initMapView(array.apartamentLan, array.apartamentLon,
+                        array.cityName + " "
+                        + array.streetName + " "
+                        + array.houseNumber + " "
+                        + array.buildingNumber + " - "
+                        + array.roomNumber);
                 content += '<p class="lead">Основная информация</p>';
                 content += "<p>";
                 content += "ID = " + array.id;
@@ -191,4 +197,26 @@ function getApartamentViewPage(apartamentId) {
         });
         $("#apartamentsFeatures").html(content);
     });
+}
+
+function initMapView(apartamentLan, apartamentLon, address) {
+    var myMap;
+//    <div id="map" style="width: 450px; height: 450px"></div>
+//    $("#mapApartamentsView").html(maps);
+    var myMap;
+    ymaps.ready(init);
+    function init() {
+        myMap = new ymaps.Map('mapApartamentsView', {
+            center: [apartamentLan, apartamentLon],
+            zoom: 16
+        });
+        var myPlacemark = new ymaps.Placemark([apartamentLan, apartamentLon], {
+            // Чтобы балун и хинт открывались на метке, необходимо задать ей определенные свойства.
+            balloonContentHeader: "",
+            balloonContentBody: address,
+            balloonContentFooter: "",
+            hintContent: ""
+        });
+        myMap.geoObjects.add(myPlacemark);
+    }
 }

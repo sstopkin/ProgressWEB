@@ -29,8 +29,6 @@ function drawApartamentsListTable(array, status) {
     str += "<th>Площадь<br>О/К/Ж</th>";
     str += '<th>Этаж</th>';
     str += '<th>Цена</th>';
-    str += "<th>Добавлено</th>";
-    str += "<th>Риэлтор</th>";
     str += "<th>Дата</th>";
     str += "</tr>";
     str += "</thead>";
@@ -59,8 +57,6 @@ function draw(array, status) {
         str += "<td>" + entry.sizeApartament + " / " + entry.sizeKitchen + " / " + entry.sizeLiving + "</td>";
         str += "<td>" + entry.floor + " / " + entry.floors + "</td>";
         str += "<td>" + entry.price + "</td>";
-        str += "<td>" + getWorkersFullNameById(entry.idWorker) + "</td>";
-        str += "<td>" + getWorkersFullNameById(entry.idWorkerTarget) + "</td>";
         str += "<td>" + timeConverter(entry.сreationDate, 'human') + "</td>";
         str += "</tr>";
     });
@@ -68,10 +64,19 @@ function draw(array, status) {
 }
 
 function drawApartamentsListMap(array, status) {
-    var myMap = new ymaps.Map('mapApartamentsListView', {
-        center: [54.989342, 73.368212],
-        zoom: 11
-    });
+    var myMap;
+    ymaps.ready(init);
+    function init() {
+        myMap = new ymaps.Map('mapApartamentsListView', {
+            center: [55.989342, 73.368212],
+            zoom: 11,
+            type: "yandex#publicMap",
+            controls: ['largeMapDefaultSet']
+        });
+//        addPlacemark(myMap, 54.974133, 73.387205, "Пушкина 67 - офис 616");
+//        addPlacemark(myMap, 56.901503, 74.373696, "ул. Советская 23 а");
+//        addPlacemark(myMap, 55.048864, 74.580722, "ул. Ленина 37 а");
+    }
     var myPlacemark;
     array.forEach(function (entry) {
         myPlacemark = new ymaps.Placemark([entry.apartamentLan, entry.apartamentLon], {
